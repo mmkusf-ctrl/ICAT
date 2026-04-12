@@ -7,6 +7,7 @@ import Teams from './pages/Teams'
 import Players from './pages/Players'
 import PointsTablePage from './pages/PointsTablePage'
 import News from './pages/News'
+import MatchDetails from './pages/MatchDetails'
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
         <Route path="/players" element={<Players />} />
         <Route path="/points-table" element={<PointsTablePage />} />
         <Route path="/news" element={<News />} />
+        <Route path="/match/:matchId" element={<MatchDetails />} />
       </Routes>
     </div>
   )
