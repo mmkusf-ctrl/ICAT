@@ -9,6 +9,9 @@ import PointsTablePage from './pages/PointsTablePage'
 import News from './pages/News'
 import MatchDetails from './pages/MatchDetails'
 import TournamentHub from './pages/TournamentHub'
+import About from './pages/About'
+import TeamIcat from './pages/TeamIcat'
+import Gallery from './pages/Gallery'
 
 export default function App() {
   return (
@@ -16,6 +19,9 @@ export default function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/team-icat" element={<TeamIcat />} />
+        <Route path="/gallery" element={<Gallery />} />
         <Route path="/live" element={<LiveScores />} />
         <Route path="/schedule" element={<Schedule />} />
         <Route path="/teams" element={<Teams />} />
