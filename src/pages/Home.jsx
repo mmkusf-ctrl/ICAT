@@ -1,7 +1,8 @@
 import MatchCard from '../components/MatchCard'
 import PointsTable from '../components/PointsTable'
 import StatLeaders from '../components/StatLeaders'
-import { liveMatches, pointsTable, topBatters, topBowlers, news } from '../data/mockData'
+import { liveMatches, topBatters, topBowlers, news } from '../data/mockData'
+import { ft20GroupA, ft20GroupB } from '../data/ft20Points'
 
 export default function Home() {
   return (
@@ -35,7 +36,10 @@ export default function Home() {
           {liveMatches.map((match, idx) => <MatchCard key={idx} match={match} />)}
         </div>
         <div className="side-stack">
-          <PointsTable table={pointsTable} />
+          <div>
+            <PointsTable title="FT20-2026 • Group A" table={ft20GroupA} />
+            <PointsTable title="FT20-2026 • Group B" table={ft20GroupB} />
+          </div>
           <StatLeaders title="Top Batters" items={topBatters} />
           <StatLeaders title="Top Bowlers" items={topBowlers} />
           <div className="card">

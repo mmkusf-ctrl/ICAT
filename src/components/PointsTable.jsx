@@ -1,7 +1,7 @@
-export default function PointsTable({ table }) {
+export default function PointsTable({ title = "Points Table", table }) {
   return (
-    <div className="card">
-      <h2 className="section-title">Points Table</h2>
+    <div className="card" style={{ marginBottom: '32px' }}>
+      <h2 className="section-title" style={{ fontSize: '18px' }}>{title}</h2>
       <div className="table-wrapper">
         <table className="table">
           <thead>
