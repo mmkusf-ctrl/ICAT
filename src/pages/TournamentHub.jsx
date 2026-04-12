@@ -7,12 +7,13 @@ import { ft20Schedule } from '../data/ft20Schedule';
 import { ft20GroupA, ft20GroupB } from '../data/ft20Points';
 import { liveMatches, topBatters, topBowlers } from '../data/mockData';
 import { ft20Teams } from '../data/ft20Teams';
+import { ft20Results } from '../data/ft20Results';
 
 export default function TournamentHub() {
   const { tournamentId } = useParams();
   const [activeTab, setActiveTab] = useState('upcoming');
 
-  const tabs = ['Live Matches', 'Upcoming', 'Schedule', 'Stats', 'Teams'];
+  const tabs = ['LIVE', 'RESULTS', 'Upcoming', 'Schedule', 'Stats', 'Teams'];
 
   // Data Selectors
   const upcomingMatches = ft20Schedule.slice(0, 6);
@@ -45,17 +46,29 @@ export default function TournamentHub() {
       {/* Tab Content Areas */}
       <section className="tab-content" style={{ marginTop: '32px' }}>
         
-        {/* LIVE MATCHES */}
-        {activeTab === 'live-matches' && (
+        {/* LIVE */}
+        {activeTab === 'live' && (
           <div className="fade-in">
             <h3 className="pane-title">Currently Live</h3>
-            {liveMatches.length > 0 ? (
+            {liveMatches && liveMatches.length > 0 ? (
               <div className="schedule-grid">
                 {liveMatches.map((match, idx) => <MatchCard key={idx} match={match} />)}
               </div>
             ) : (
-              <p style={{ color: 'var(--text-muted)' }}>No live matches at the moment.</p>
+              <p style={{ color: 'var(--text-muted)' }}>No live matches are happening right now.</p>
             )}
+          </div>
+        )}
+
+        {/* RESULTS */}
+        {activeTab === 'results' && (
+          <div className="fade-in">
+            <h3 className="pane-title">Past Results</h3>
+            <div className="schedule-grid">
+               {ft20Results.map((match) => (
+                 <MatchCard key={match.id} match={match} />
+               ))}
+            </div>
           </div>
         )}
 
