@@ -48,7 +48,7 @@ export default function Home() {
 
       <section className="grid two" style={{ marginTop: '64px' }}>
         <div>
-          <h2 className="section-title">Featured Matches</h2>
+          <h2 className="section-title">Week Highlights</h2>
           {liveMatches.map((match, idx) => <MatchCard key={idx} match={match} />)}
         </div>
         <div className="side-stack">
