@@ -1,10 +1,7 @@
 import { Link } from 'react-router-dom'
-import MatchCard from '../components/MatchCard'
-import PointsTable from '../components/PointsTable'
 import StatLeaders from '../components/StatLeaders'
 import StreamCard from '../components/StreamCard'
-import { liveMatches, topBatters, topBowlers, news } from '../data/mockData'
-import { ft20GroupA, ft20GroupB } from '../data/ft20Points'
+import { topBatters, topBowlers, news } from '../data/mockData'
 import { streams } from '../data/youtubeStreams'
 
 export default function Home() {
@@ -48,17 +45,11 @@ export default function Home() {
       </section>
 
       <section className="grid two" style={{ marginTop: '64px' }}>
-        <div>
-          <h2 className="section-title">Week Highlights</h2>
-          {liveMatches.map((match, idx) => <MatchCard key={idx} match={match} />)}
-        </div>
         <div className="side-stack">
-          <div>
-            <PointsTable title="FT20-2026 • Group A" table={ft20GroupA} />
-            <PointsTable title="FT20-2026 • Group B" table={ft20GroupB} />
-          </div>
           <StatLeaders title="Top Batters" items={topBatters} />
           <StatLeaders title="Top Bowlers" items={topBowlers} />
+        </div>
+        <div className="side-stack">
           <div className="card">
             <h2 className="section-title">Latest News</h2>
             <div className="news-list">
