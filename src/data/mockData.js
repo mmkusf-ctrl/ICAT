@@ -5,7 +5,7 @@ export const liveMatches = [
     team2: 'Toons CC',
     score1: '154/4 (16.2)',
     score2: '148/8 (20)',
-    venue: 'Tampa Cricket Ground',
+    venue: 'FT20-2026 • Tampa Ground',
     status: 'Live',
     result: 'ICAT need 5 runs in 22 balls'
   },
@@ -15,7 +15,7 @@ export const liveMatches = [
     team2: 'Floridians CC',
     score1: 'Starts 6:30 PM',
     score2: 'League Match',
-    venue: 'Sarasota Oval',
+    venue: 'FT20-2026 • Sarasota Oval',
     status: 'Upcoming',
     result: 'Playing XI to be announced'
   },
@@ -25,7 +25,7 @@ export const liveMatches = [
     team2: 'Game Changers',
     score1: '172/6',
     score2: '165/9',
-    venue: 'Orlando Turf',
+    venue: 'FT20-2026 • Orlando Turf',
     status: 'Result',
     result: 'Silver Hawks won by 7 runs'
   }
