@@ -548,3 +548,12 @@ a {
 
 .points-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
 @media (max-width: 900px) { .points-grid { grid-template-columns: 1fr; } }
+
+/* Accordion Styles */
+.clickable-row:hover { background: rgba(255,255,255,0.02); }
+.expanded-row-active { background: rgba(255, 215, 0, 0.05); border-left: 2px solid var(--accent-gold); }
+.accordion-row { background: #0a0a0a; border-bottom: 1px solid var(--border-light); }
+.accordion-content { padding: 16px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.05); border-radius: 4px; }
+.accordion-matches-list { display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+.accordion-match-item { background: #111; padding: 12px; border-radius: 4px; display: flex; flex-direction: column; gap: 4px; border: 1px solid #222; }
+.match-mini-details { display: flex; align-items: center; gap: 8px; }
