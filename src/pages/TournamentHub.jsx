@@ -100,7 +100,7 @@ export default function TournamentHub() {
         {activeTab === 'points-table' && (
           <div className="fade-in">
             <h3 className="pane-title">Tournament Standings</h3>
-            <div className="grid two">
+            <div className="points-grid">
               <PointsTable title="Group A (League Matches)" table={ft20GroupA} />
               <PointsTable title="Group B (League Matches)" table={ft20GroupB} />
             </div>

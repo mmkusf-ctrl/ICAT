@@ -545,3 +545,6 @@ a {
 .teams-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 32px; }
 .team-card { padding: 24px; }
 .fade-in { animation: fadeIn 0.4s ease-out; }
+
+.points-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+@media (max-width: 900px) { .points-grid { grid-template-columns: 1fr; } }
