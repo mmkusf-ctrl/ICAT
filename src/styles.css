@@ -487,3 +487,6 @@ a {
     font-size: 36px;
   }
 }
+
+.schedule-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 32px; align-items: stretch; }
+.match-card { display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
