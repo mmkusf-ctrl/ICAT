@@ -523,3 +523,21 @@ a {
 .comm-item { display: flex; gap: 24px; padding: 16px 0; border-bottom: 1px solid var(--border-light); }
 .comm-over { font-weight: bold; color: var(--accent-gold); }
 .comm-text strong { color: var(--text-main); }
+
+/* YouTube Streams */
+.live-streams { margin-bottom: 64px; }
+.streams-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.stream-card { display: flex; flex-direction: column; background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 4px; overflow: hidden; transition: all 0.4s ease; text-decoration: none; cursor: pointer; }
+.stream-card:hover { transform: translateY(-4px); border-color: rgba(255, 0, 0, 0.4); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+.stream-card:hover .play-icon { color: #ff0000; transform: scale(1.1); }
+.stream-thumbnail { position: relative; height: 180px; width: 100%; overflow: hidden; }
+.stream-thumbnail img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: all 0.4s ease; }
+.stream-card:hover .stream-thumbnail img { opacity: 1; }
+.stream-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.4); transition: all 0.4s; }
+.play-icon { font-size: 48px; color: rgba(255,255,255,0.7); transition: all 0.4s ease; }
+.stream-info { padding: 16px; }
+.stream-info h4 { font-size: 16px; margin-bottom: 8px; color: var(--text-main); font-weight: 400; line-height: 1.4; }
+.stream-info p { font-size: 12px; color: var(--text-muted); }
+.stream-badge { position: absolute; top: 12px; left: 12px; background: rgba(0,0,0,0.8); border: 1px solid var(--border-light); color: var(--text-muted); padding: 4px 8px; font-size: 10px; font-weight: 600; border-radius: 2px; letter-spacing: 1px; }
+.live-badge { background: #ef4444; color: #fff; border-color: #ef4444; }
+@media (max-width: 900px) { .streams-grid { grid-template-columns: 1fr; } }

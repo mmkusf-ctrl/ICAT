@@ -1,8 +1,10 @@
 import MatchCard from '../components/MatchCard'
 import PointsTable from '../components/PointsTable'
 import StatLeaders from '../components/StatLeaders'
+import StreamCard from '../components/StreamCard'
 import { liveMatches, topBatters, topBowlers, news } from '../data/mockData'
 import { ft20GroupA, ft20GroupB } from '../data/ft20Points'
+import { streams } from '../data/youtubeStreams'
 
 export default function Home() {
   return (
@@ -30,7 +32,21 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="grid two">
+      {/* Official YouTube Broadcasting */}
+      <section className="live-streams">
+        <div className="streams-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '24px', borderBottom: '1px solid var(--border-light)', paddingBottom: '16px' }}>
+          <h2 className="section-title" style={{ borderBottom: 'none', marginBottom: 0 }}>
+            <i className="fa-brands fa-youtube" style={{ color: '#ff0000', marginRight: '12px' }}></i>
+            Official Channel Streams
+          </h2>
+          <a href="https://www.youtube.com/@ICAT-FT20" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-gold)', fontSize: '14px', letterSpacing: '1px', textTransform: 'uppercase' }}>Subscribe &rarr;</a>
+        </div>
+        <div className="streams-grid">
+          {streams.map(stream => <StreamCard key={stream.id} stream={stream} />)}
+        </div>
+      </section>
+
+      <section className="grid two" style={{ marginTop: '64px' }}>
         <div>
           <h2 className="section-title">Featured Matches</h2>
           {liveMatches.map((match, idx) => <MatchCard key={idx} match={match} />)}
