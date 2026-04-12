@@ -1,9 +1,12 @@
 import { NavLink } from 'react-router-dom'
+import logo from '../assets/logo.svg'
 
 export default function Navbar() {
   return (
     <header className="navbar">
-      <div className="brand">ICAT LIVE</div>
+      <div className="brand">
+        <img src={logo} alt="ICAT Logo" className="logo-img" />
+      </div>
       <nav>
         <NavLink to="/">Home</NavLink>
         <NavLink to="/live">Live</NavLink>
