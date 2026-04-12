@@ -17,6 +17,18 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Featured Tournaments Row */}
+      <section className="tournaments-row">
+        <div className="tourney-card">
+          <h3>FWCWL 25-26</h3>
+          <p>The premier winter league showcasing top-tier local talent.</p>
+        </div>
+        <div className="tourney-card">
+          <h3>FRIENDSHIP CUP T20 26</h3>
+          <p>Annual community championship gathering the finest squads in Florida.</p>
+        </div>
+      </section>
+
       <section className="grid two">
         <div>
           <h2 className="section-title">Featured Matches</h2>

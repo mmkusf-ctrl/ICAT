@@ -1,5 +1,4 @@
 export default function MatchCard({ match }) {
-  // Determine badge styling based on Status
   const isLive = match.status.toLowerCase() === 'live';
   const isResult = match.status.toLowerCase() === 'result';
   const badgeClass = isLive ? 'live' : isResult ? 'result' : 'upcoming';
@@ -14,8 +13,7 @@ export default function MatchCard({ match }) {
       <div className="match-teams">
         <div className="team-row">
           <div className="team-info">
-            {/* Using a placeholder circle for a clean look assuming no logos */}
-            <div style={{ width: 24, height: 24, borderRadius: '50%', background: 'rgba(255,255,255,0.1)' }}></div>
+            <div className="team-circle"></div>
             {match.team1}
           </div>
           <div className="team-score">{match.score1}</div>
@@ -23,7 +21,7 @@ export default function MatchCard({ match }) {
         
         <div className="team-row">
           <div className="team-info">
-            <div style={{ width: 24, height: 24, borderRadius: '50%', background: 'rgba(255,255,255,0.1)' }}></div>
+            <div className="team-circle"></div>
             {match.team2}
           </div>
           <div className="team-score">{match.score2}</div>
