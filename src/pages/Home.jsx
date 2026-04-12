@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import MatchCard from '../components/MatchCard'
 import PointsTable from '../components/PointsTable'
 import StatLeaders from '../components/StatLeaders'
@@ -22,14 +23,14 @@ export default function Home() {
 
       {/* Featured Tournaments Row */}
       <section className="tournaments-row">
-        <div className="tourney-card">
+        <Link to="/schedule" className="tourney-card interactive" style={{ display: 'block', textDecoration: 'none' }}>
           <h3>FWCWL 25-26</h3>
           <p>The premier winter league showcasing top-tier local talent.</p>
-        </div>
-        <div className="tourney-card">
+        </Link>
+        <Link to="/schedule" className="tourney-card interactive" style={{ display: 'block', textDecoration: 'none' }}>
           <h3>FRIENDSHIP CUP T20 26</h3>
           <p>Annual community championship gathering the finest squads in Florida.</p>
-        </div>
+        </Link>
       </section>
 
       {/* Official YouTube Broadcasting */}
