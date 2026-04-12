@@ -27,7 +27,7 @@ export default function Home() {
           <h3>FWCWL 25-26</h3>
           <p>The premier winter league showcasing top-tier local talent.</p>
         </Link>
-        <Link to="/schedule" className="tourney-card interactive" style={{ display: 'block', textDecoration: 'none' }}>
+        <Link to="/tournament/ft20-2026" className="tourney-card interactive" style={{ display: 'block', textDecoration: 'none' }}>
           <h3>FRIENDSHIP CUP T20 26</h3>
           <p>Annual community championship gathering the finest squads in Florida.</p>
         </Link>

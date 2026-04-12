@@ -8,6 +8,7 @@ import Players from './pages/Players'
 import PointsTablePage from './pages/PointsTablePage'
 import News from './pages/News'
 import MatchDetails from './pages/MatchDetails'
+import TournamentHub from './pages/TournamentHub'
 
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
         <Route path="/points-table" element={<PointsTablePage />} />
         <Route path="/news" element={<News />} />
         <Route path="/match/:matchId" element={<MatchDetails />} />
+        <Route path="/tournament/:tournamentId" element={<TournamentHub />} />
       </Routes>
     </div>
   )

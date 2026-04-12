@@ -541,3 +541,7 @@ a {
 .stream-badge { position: absolute; top: 12px; left: 12px; background: rgba(0,0,0,0.8); border: 1px solid var(--border-light); color: var(--text-muted); padding: 4px 8px; font-size: 10px; font-weight: 600; border-radius: 2px; letter-spacing: 1px; }
 .live-badge { background: #ef4444; color: #fff; border-color: #ef4444; }
 @media (max-width: 900px) { .streams-grid { grid-template-columns: 1fr; } }
+
+.teams-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 32px; }
+.team-card { padding: 24px; }
+.fade-in { animation: fadeIn 0.4s ease-out; }
