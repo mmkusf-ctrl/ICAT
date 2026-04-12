@@ -13,7 +13,7 @@ export default function TournamentHub() {
   const { tournamentId } = useParams();
   const [activeTab, setActiveTab] = useState('upcoming');
 
-  const tabs = ['LIVE', 'RESULTS', 'Upcoming', 'Schedule', 'Stats', 'Teams'];
+  const tabs = ['LIVE', 'RESULTS', 'Upcoming', 'Schedule', 'Points Table', 'Stats', 'Teams'];
 
   // Data Selectors
   const upcomingMatches = ft20Schedule.slice(0, 6);
@@ -96,19 +96,24 @@ export default function TournamentHub() {
           </div>
         )}
 
-        {/* STATS NO.4 */}
+        {/* POINTS TABLE N0.4 */}
+        {activeTab === 'points-table' && (
+          <div className="fade-in">
+            <h3 className="pane-title">Tournament Standings</h3>
+            <div className="grid two">
+              <PointsTable title="Group A (League Matches)" table={ft20GroupA} />
+              <PointsTable title="Group B (League Matches)" table={ft20GroupB} />
+            </div>
+          </div>
+        )}
+
+        {/* STATS NO.5 */}
         {activeTab === 'stats' && (
           <div className="fade-in">
-            <h3 className="pane-title">Standings & Insights</h3>
+            <h3 className="pane-title">Player Leaderboards</h3>
             <div className="grid two">
-              <div>
-                <PointsTable title="Group A (League Matches)" table={ft20GroupA} />
-                <PointsTable title="Group B (League Matches)" table={ft20GroupB} />
-              </div>
-              <div className="side-stack">
-                <StatLeaders title="Top Batters" items={topBatters} />
-                <StatLeaders title="Top Bowlers" items={topBowlers} />
-              </div>
+              <StatLeaders title="Top Batters" items={topBatters} />
+              <StatLeaders title="Top Bowlers" items={topBowlers} />
             </div>
           </div>
         )}
