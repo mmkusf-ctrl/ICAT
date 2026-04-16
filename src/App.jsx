@@ -12,6 +12,7 @@ import TournamentHub from './pages/TournamentHub'
 import About from './pages/About'
 import TeamIcat from './pages/TeamIcat'
 import Gallery from './pages/Gallery'
+import BroadcastStudio from './pages/BroadcastStudio'
 
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
         <Route path="/about" element={<About />} />
         <Route path="/team-icat" element={<TeamIcat />} />
         <Route path="/gallery" element={<Gallery />} />
+        <Route path="/broadcast" element={<BroadcastStudio />} />
         <Route path="/live" element={<LiveScores />} />
         <Route path="/schedule" element={<Schedule />} />
         <Route path="/teams" element={<Teams />} />

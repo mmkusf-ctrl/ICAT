@@ -1,0 +1,14 @@
+{
+  "name": "icat-broadcast-proxy",
+  "version": "1.0.0",
+  "description": "Node.js WebSocket to RTMP server for ICAT live broadcasts",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "socket.io": "^4.7.5",
+    "dotenv": "^16.4.5"
+  }
+}

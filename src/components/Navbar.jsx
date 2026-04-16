@@ -14,6 +14,7 @@ export default function Navbar() {
         <NavLink to="/team-icat">Team ICAT</NavLink>
         <NavLink to="/gallery">Gallery</NavLink>
         <NavLink to="/news">News</NavLink>
+        <NavLink to="/broadcast" style={{ color: 'var(--accent-red)' }}><i className="fa-solid fa-tower-broadcast"></i> CAPTAIN'S STUDIO</NavLink>
       </nav>
     </header>
   )
