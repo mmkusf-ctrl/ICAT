@@ -10,7 +10,7 @@ export default function BroadcastStudio() {
   const [streamActive, setStreamActive] = useState(false);
   const [serverUrl, setServerUrl] = useState('http://localhost:3000');
   
-  // Scoring State
+  // Scoring State (Synced from Server)
   const [score, setScore] = useState(0);
   const [wickets, setWickets] = useState(0);
   const [overs, setOvers] = useState(0.0);
@@ -19,6 +19,23 @@ export default function BroadcastStudio() {
 
   // Request Animation Frame reference for drawing
   const requestRef = useRef();
+
+  // Initialize Socket sync
+  useEffect(() => {
+    socketRef.current = io(serverUrl);
+    
+    socketRef.current.on('sync-state', (payload) => {
+      if (payload.score !== undefined) setScore(payload.score);
+      if (payload.wickets !== undefined) setWickets(payload.wickets);
+      if (payload.overs !== undefined) setOvers(payload.overs);
+      if (payload.battingTeam !== undefined) setBattingTeam(payload.battingTeam);
+      if (payload.bowlingTeam !== undefined) setBowlingTeam(payload.bowlingTeam);
+    });
+
+    return () => {
+      if (socketRef.current) socketRef.current.disconnect();
+    };
+  }, [serverUrl]);
 
   // Initialize Camera
   useEffect(() => {
@@ -84,7 +101,7 @@ export default function BroadcastStudio() {
     // Overs
     ctx.fillStyle = '#a1a1aa'; // Muted text
     ctx.font = '400 36px "Inter", sans-serif';
-    ctx.fillText(`OVERS: ${overs.toFixed(1)}`, 740, 955);
+    ctx.fillText(`OVERS: ${Number(overs).toFixed(1)}`, 740, 955);
   };
 
   useEffect(() => {
@@ -99,36 +116,33 @@ export default function BroadcastStudio() {
 
   // RTMP Streaming Logic
   const startStream = () => {
-    socketRef.current = io(serverUrl);
+    if (!socketRef.current) return;
     
-    socketRef.current.on('connect', () => {
-      console.log('Connected to Ingest Server');
-      socketRef.current.emit('start-stream');
+    socketRef.current.emit('start-stream');
 
-      // Capture canvas stream at 30fps
-      const canvasStream = canvasRef.current.captureStream(30);
-      
-      // Merge audio from camera
-      const audioTracks = videoRef.current.srcObject.getAudioTracks();
-      if (audioTracks.length > 0) {
-        canvasStream.addTrack(audioTracks[0]);
-      }
+    // Capture canvas stream at 30fps
+    const canvasStream = canvasRef.current.captureStream(30);
+    
+    // Merge audio from camera
+    const audioTracks = videoRef.current.srcObject ? videoRef.current.srcObject.getAudioTracks() : [];
+    if (audioTracks.length > 0) {
+      canvasStream.addTrack(audioTracks[0]);
+    }
 
-      mediaRecorderRef.current = new MediaRecorder(canvasStream, {
-        mimeType: 'video/webm; codecs=vp9',
-        videoBitsPerSecond: 4000000 // 4 Mbps
-      });
-
-      mediaRecorderRef.current.ondataavailable = (e) => {
-        if (e.data && e.data.size > 0 && socketRef.current.connected) {
-          socketRef.current.emit('binary-stream', e.data);
-        }
-      };
-
-      // Send chunks every 250ms
-      mediaRecorderRef.current.start(250);
-      setStreamActive(true);
+    mediaRecorderRef.current = new MediaRecorder(canvasStream, {
+      mimeType: 'video/webm; codecs=vp9',
+      videoBitsPerSecond: 4000000 // 4 Mbps
     });
+
+    mediaRecorderRef.current.ondataavailable = (e) => {
+      if (e.data && e.data.size > 0 && socketRef.current.connected) {
+        socketRef.current.emit('binary-stream', e.data);
+      }
+    };
+
+    // Send chunks every 250ms
+    mediaRecorderRef.current.start(250);
+    setStreamActive(true);
   };
 
   const stopStream = () => {
@@ -137,87 +151,49 @@ export default function BroadcastStudio() {
     }
     if (socketRef.current) {
       socketRef.current.emit('stop-stream');
-      socketRef.current.disconnect();
     }
     setStreamActive(false);
   };
-
-  // Helper Score Update Functions
-  const addRuns = (runs) => setScore(s => s + runs);
-  const addWicket = () => setWickets(w => w + 1);
-  const addBall = () => setOvers(o => {
-    const balls = Math.round((o - Math.floor(o)) * 10);
-    if (balls >= 5) return Math.floor(o) + 1.0;
-    return o + 0.1;
-  });
 
   return (
     <main className="container fade-in">
       <section className="match-center-hero" style={{ padding: '32px', marginBottom: '24px' }}>
         <h1 style={{ color: 'var(--text-main)', fontSize: '36px', marginBottom: '8px' }}>Captain's Broadcast Studio</h1>
-        <p style={{ color: 'var(--text-muted)' }}>Streams live at 1080p@30fps to ICAT YouTube Channel</p>
+        <p style={{ color: 'var(--text-muted)' }}>Streams live at 1080p@30fps. Scoring is controlled remotely via the Match Center.</p>
       </section>
 
-      <div className="grid two">
-        {/* Stream Preview Column */}
-        <div className="side-stack">
-          <div className="card" style={{ padding: '0', overflow: 'hidden', background: '#000' }}>
-            <video ref={videoRef} autoPlay muted style={{ display: 'none' }}></video>
-            
-            {/* The Composited Canvas which is actually streamed */}
-            <canvas 
-              ref={canvasRef} 
-              width="1920" 
-              height="1080" 
-              style={{ width: '100%', height: 'auto', display: 'block' }}
-            />
-          </div>
-
-          <div className="card">
-            <h3 style={{ marginBottom: '16px', color: 'var(--accent-red)' }}>Stream Controls</h3>
-            <div style={{ display: 'flex', gap: '16px', marginBottom: '16px' }}>
-              <input 
-                type="text" 
-                value={serverUrl} 
-                onChange={(e) => setServerUrl(e.target.value)} 
-                style={{ flex: 1, padding: '12px', background: 'var(--bg-page)', border: '1px solid var(--border-light)', color: '#fff', borderRadius: '4px' }}
-                placeholder="Ingest Backend Server URL"
-              />
-            </div>
-            {!streamActive ? (
-              <button className="app-btn" onClick={startStream} style={{ width: '100%', justifyContent: 'center' }}>
-                <i className="fa-solid fa-play"></i> GO LIVE
-              </button>
-            ) : (
-              <button className="app-btn" onClick={stopStream} style={{ width: '100%', justifyContent: 'center', borderColor: '#a1a1aa', color: '#a1a1aa' }}>
-                <i className="fa-solid fa-stop"></i> END STREAM
-              </button>
-            )}
-          </div>
+      <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+        <div className="card" style={{ padding: '0', overflow: 'hidden', background: '#000', marginBottom: '24px' }}>
+          <video ref={videoRef} autoPlay muted style={{ display: 'none' }}></video>
+          
+          <canvas 
+            ref={canvasRef} 
+            width="1920" 
+            height="1080" 
+            style={{ width: '100%', height: 'auto', display: 'block' }}
+          />
         </div>
 
-        {/* Live Scorer Column */}
-        <div className="side-stack">
-          <div className="card">
-            <h2 className="section-title">Live Scorer Action</h2>
-            
-            <div style={{ background: 'var(--bg-page)', padding: '24px', borderRadius: '4px', marginBottom: '32px', textAlign: 'center', border: '1px solid var(--border-light)' }}>
-              <div style={{ fontSize: '18px', color: 'var(--text-muted)', marginBottom: '8px' }}>{battingTeam} vs {bowlingTeam}</div>
-              <div style={{ fontSize: '64px', fontFamily: 'var(--font-heading)', color: 'var(--accent-red)' }}>{score}/{wickets}</div>
-              <div style={{ fontSize: '20px', color: 'var(--text-muted)' }}>Overs: {overs.toFixed(1)}</div>
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px', marginBottom: '24px' }}>
-              <button className="app-btn" onClick={() => addRuns(1)} style={{ justifyContent: 'center' }}>+1 Run</button>
-              <button className="app-btn" onClick={() => addRuns(4)} style={{ justifyContent: 'center' }}>+4 Runs</button>
-              <button className="app-btn" onClick={() => addRuns(6)} style={{ justifyContent: 'center' }}>+6 Runs</button>
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-              <button className="app-btn" onClick={addWicket} style={{ justifyContent: 'center', background: 'rgba(230, 57, 70, 0.1)' }}>+1 Wicket</button>
-              <button className="app-btn" onClick={addBall} style={{ justifyContent: 'center' }}>Ball Done</button>
-            </div>
+        <div className="card">
+          <h3 style={{ marginBottom: '16px', color: 'var(--accent-red)' }}>Stream Controls</h3>
+          <div style={{ display: 'flex', gap: '16px', marginBottom: '16px' }}>
+            <input 
+              type="text" 
+              value={serverUrl} 
+              onChange={(e) => setServerUrl(e.target.value)} 
+              style={{ flex: 1, padding: '12px', background: 'var(--bg-page)', border: '1px solid var(--border-light)', color: '#fff', borderRadius: '4px' }}
+              placeholder="Ingest Backend Server URL"
+            />
           </div>
+          {!streamActive ? (
+            <button className="app-btn" onClick={startStream} style={{ width: '100%', justifyContent: 'center' }}>
+              <i className="fa-solid fa-play"></i> GO LIVE
+            </button>
+          ) : (
+            <button className="app-btn" onClick={stopStream} style={{ width: '100%', justifyContent: 'center', borderColor: '#a1a1aa', color: '#a1a1aa' }}>
+              <i className="fa-solid fa-stop"></i> END STREAM
+            </button>
+          )}
         </div>
       </div>
     </main>

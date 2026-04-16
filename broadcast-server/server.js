@@ -18,9 +18,30 @@ const io = new Server(server, {
 // You MUST set this in your server's environment variables.
 const RTMP_URL = process.env.RTMP_URL || 'rtmp://a.rtmp.youtube.com/live2/YOUR_STREAM_KEY';
 
+// In-Memory Global Match State for Scorer/Broadcaster sync
+let globalMatchState = {
+  score: 0,
+  wickets: 0,
+  overs: 0.0,
+  battingTeam: 'ICAT',
+  bowlingTeam: 'OPP',
+  striker: '',
+  nonStriker: '',
+  bowler: ''
+};
+
 io.on('connection', (socket) => {
-  console.log(`[+] Broadcaster connected: ${socket.id}`);
+  console.log(`[+] Client connected: ${socket.id}`);
   let ffmpeg = null;
+
+  // Immediately send the current state to newly connected client
+  socket.emit('sync-state', globalMatchState);
+
+  // When a Scorer updates the details, broadcast it everywhere
+  socket.on('update-state', (payload) => {
+    globalMatchState = { ...globalMatchState, ...payload };
+    io.emit('sync-state', globalMatchState); // Emit to everyone, including broadcasters
+  });
 
   socket.on('start-stream', () => {
     console.log(`[~] Starting FFmpeg process for ${socket.id}`);
