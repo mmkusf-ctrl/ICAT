@@ -10,9 +10,14 @@ export default function MatchDetails() {
 
   return (
     <main className="container match-center">
-      <button className="back-btn" onClick={() => navigate(-1)}>
-        &larr; Back to Dashboard
-      </button>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+        <button className="back-btn" onClick={() => navigate(-1)} style={{ marginBottom: 0 }}>
+          &larr; Back to Dashboard
+        </button>
+        <button onClick={() => navigate('/broadcast')} className="app-btn" style={{ padding: '8px 16px', fontSize: '12px' }}>
+          <i className="fa-solid fa-tower-broadcast"></i> BROADCAST MATCH
+        </button>
+      </div>
 
       {/* Hero Header for the Match */}
       <section className="match-center-hero">
