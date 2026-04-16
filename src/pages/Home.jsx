@@ -1,15 +1,14 @@
 import { Link } from 'react-router-dom'
-import MatchCard from '../components/MatchCard'
 import StreamCard from '../components/StreamCard'
-import { liveMatches, news } from '../data/mockData'
+import { news } from '../data/mockData'
 import { streams } from '../data/youtubeStreams'
 
 export default function Home() {
   return (
     <main className="container">
       <section className="hero">
-        <h1>ICAT Premium Portal</h1>
-        <p>Live scores, fixtures, standings, player stats, and league news.</p>
+        <h1>ICAT</h1>
+        <p>INTERNATIONAL CRICKET ASSOCIATION OF TAMPA</p>
         
         <div className="hero-app-promo" style={{ marginTop: '24px' }}>
           <a href="https://play.google.com/store/apps/details?id=com.cricheroes.icat&hl=en_US" target="_blank" rel="noopener noreferrer" className="app-btn">
@@ -44,19 +43,12 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="grid two" style={{ marginTop: '64px' }}>
-        <div className="side-stack">
-          <div>
-            <h2 className="section-title">Week Highlights</h2>
-            {liveMatches.map((match, idx) => <MatchCard key={idx} match={match} />)}
-          </div>
-        </div>
-        <div className="side-stack">
-          <div className="card">
-            <h2 className="section-title">Latest News</h2>
-            <div className="news-list">
-              {news.map((item, idx) => (
-                <div key={idx} className="news-item">
+      <section style={{ marginTop: '64px', maxWidth: '800px', margin: '64px auto 0' }}>
+        <div className="card">
+          <h2 className="section-title" style={{ textAlign: 'center' }}>Latest News</h2>
+          <div className="news-list">
+            {news.map((item, idx) => (
+              <div key={idx} className="news-item">
                   <div className="news-dot"></div>
                   <p>{item}</p>
                 </div>
