@@ -1,22 +1,22 @@
 :root {
-  /* Color Palette - Luxury Obsidian & Champagne */
-  --bg-page: #050505;
-  --bg-card: rgba(18, 18, 18, 0.4);
-  --bg-nav: rgba(5, 5, 5, 0.95);
+  /* Color Palette - Deep Ocean & Crimson */
+  --bg-page: #040914;
+  --bg-card: rgba(10, 20, 45, 0.4);
+  --bg-nav: rgba(4, 9, 20, 0.95);
   
   --text-main: #f9fafb;
   --text-muted: #a1a1aa;
   
-  --accent-gold: #c5a059;
+  --accent-red: #E63946;
   --accent-silver: #e2e8f0;
   
   /* High-end minimalist borders */
   --border-light: rgba(255, 255, 255, 0.05);
-  --border-glow: rgba(197, 160, 89, 0.3);
+  --border-glow: rgba(230, 57, 70, 0.3);
   
   /* Minimalist Shadows */
-  --shadow-lg: 0 20px 40px -10px rgba(0, 0, 0, 0.9);
-  --shadow-glow: 0 0 30px rgba(197, 160, 89, 0.05);
+  --shadow-lg: 0 20px 40px -10px rgba(0, 0, 0, 0.6);
+  --shadow-glow: 0 0 30px rgba(230, 57, 70, 0.05);
   
   /* Typography */
   --font-heading: 'Outfit', sans-serif;
@@ -107,11 +107,11 @@ a {
 }
 
 .navbar a:hover {
-  color: var(--accent-gold);
+  color: var(--accent-red);
 }
 
 .navbar a.active {
-  color: var(--accent-gold);
+  color: var(--accent-red);
 }
 
 .navbar a.active::after {
@@ -121,7 +121,7 @@ a {
   left: 0;
   width: 100%;
   height: 1px;
-  background: var(--accent-gold);
+  background: var(--accent-red);
 }
 
 /* Hero Section */
@@ -156,11 +156,11 @@ a {
   align-items: center;
   gap: 12px;
   background: transparent;
-  border: 1px solid var(--accent-gold);
+  border: 1px solid var(--accent-red);
   padding: 14px 32px;
   border-radius: 2px;
   font-weight: 400;
-  color: var(--accent-gold);
+  color: var(--accent-red);
   text-decoration: none;
   transition: all 0.4s ease;
   letter-spacing: 1px;
@@ -169,7 +169,7 @@ a {
 }
 
 .app-btn:hover {
-  background: var(--accent-gold);
+  background: var(--accent-red);
   color: var(--bg-page);
 }
 
@@ -201,13 +201,13 @@ a {
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(to right, transparent, rgba(197, 160, 89, 0.2), transparent);
+  background: linear-gradient(to right, transparent, rgba(230, 57, 70, 0.2), transparent);
   opacity: 0;
   transition: opacity 0.4s ease;
 }
 
 .tourney-card:hover {
-  border-color: rgba(197, 160, 89, 0.4);
+  border-color: rgba(230, 57, 70, 0.4);
   background: rgba(18, 18, 18, 0.8);
 }
 
@@ -216,7 +216,7 @@ a {
 }
 
 .tourney-card h3 {
-  color: var(--accent-gold);
+  color: var(--accent-red);
   font-size: 24px;
   margin-bottom: 12px;
   letter-spacing: 1px;
@@ -339,7 +339,7 @@ a {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--accent-gold);
+  background: var(--accent-red);
   opacity: 0.5;
 }
 
@@ -359,7 +359,7 @@ a {
 }
 
 .highlight {
-  color: var(--accent-gold);
+  color: var(--accent-red);
 }
 
 /* Tables */
@@ -452,13 +452,13 @@ a {
 
 .news-item:hover {
   padding-left: 8px;
-  color: var(--accent-gold);
+  color: var(--accent-red);
 }
 
 .news-dot {
   width: 6px;
   height: 6px;
-  background: var(--accent-gold);
+  background: var(--accent-red);
   border-radius: 50%;
   margin-top: 8px;
 }
@@ -494,7 +494,7 @@ a {
 /* Match Center Details */
 .match-center { padding-top: 24px; }
 .back-btn { background: none; border: none; color: var(--text-muted); font-size: 14px; cursor: pointer; margin-bottom: 24px; transition: color 0.3s; }
-.back-btn:hover { color: var(--accent-gold); }
+.back-btn:hover { color: var(--accent-red); }
 .match-center-hero { background: linear-gradient(135deg, rgba(18,18,18,0.8), rgba(0,0,0,0.9)); border: 1px solid var(--border-light); border-radius: 4px; padding: 48px; text-align: center; margin-bottom: 32px; }
 .match-center-status { margin-bottom: 24px; display: flex; justify-content: center; align-items: center; gap: 16px; }
 .center-venue { color: var(--text-muted); font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
@@ -502,26 +502,26 @@ a {
 .center-team h2 { font-size: 32px; margin-bottom: 8px; color: var(--text-main); }
 .center-score { font-size: 24px; font-family: var(--font-heading); color: var(--text-muted); }
 .center-score span { font-size: 14px; }
-.center-score.highlight { color: var(--accent-gold); }
+.center-score.highlight { color: var(--accent-red); }
 .center-vs { font-size: 20px; color: var(--border-light); font-weight: 300; }
-.match-center-footer { border-top: 1px dashed var(--border-light); padding-top: 24px; color: var(--accent-gold); font-size: 14px; letter-spacing: 0.5px; }
+.match-center-footer { border-top: 1px dashed var(--border-light); padding-top: 24px; color: var(--accent-red); font-size: 14px; letter-spacing: 0.5px; }
 /* Tabs */
 .tab-nav { display: flex; gap: 32px; border-bottom: 1px solid var(--border-light); margin-bottom: 32px; }
 .tab-btn { background: none; border: none; padding: 12px 0; color: var(--text-muted); font-size: 16px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; position: relative; transition: color 0.3s; }
 .tab-btn:hover { color: var(--text-main); }
-.tab-btn.active { color: var(--accent-gold); }
-.tab-btn.active::after { content: ''; position: absolute; bottom: -1px; left: 0; width: 100%; height: 2px; background: var(--accent-gold); }
-.pane-title { font-size: 20px; margin-bottom: 24px; color: var(--accent-gold); letter-spacing: 1px; }
+.tab-btn.active { color: var(--accent-red); }
+.tab-btn.active::after { content: ''; position: absolute; bottom: -1px; left: 0; width: 100%; height: 2px; background: var(--accent-red); }
+.pane-title { font-size: 20px; margin-bottom: 24px; color: var(--accent-red); letter-spacing: 1px; }
 .squad-list { list-style: none; display: flex; flex-direction: column; gap: 12px; color: var(--text-muted); }
 .balls { display: flex; gap: 8px; margin-top: 8px; }
 .ball { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: bold; }
 .ball.run { background: rgba(255,255,255,0.1); border: 1px solid var(--border-light); }
-.ball.boundary { background: rgba(197, 160, 89, 0.2); border: 1px solid var(--accent-gold); color: var(--accent-gold); }
+.ball.boundary { background: rgba(230, 57, 70, 0.2); border: 1px solid var(--accent-red); color: var(--accent-red); }
 .ball.wicket { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #ef4444; }
 .ball.dot { background: transparent; border: 1px dashed var(--text-muted); color: var(--text-muted); }
 .over-num { font-size: 14px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1px; }
 .comm-item { display: flex; gap: 24px; padding: 16px 0; border-bottom: 1px solid var(--border-light); }
-.comm-over { font-weight: bold; color: var(--accent-gold); }
+.comm-over { font-weight: bold; color: var(--accent-red); }
 .comm-text strong { color: var(--text-main); }
 
 /* YouTube Streams */
@@ -551,7 +551,7 @@ a {
 
 /* Accordion Styles */
 .clickable-row:hover { background: rgba(255,255,255,0.02); }
-.expanded-row-active { background: rgba(255, 215, 0, 0.05); border-left: 2px solid var(--accent-gold); }
+.expanded-row-active { background: rgba(255, 215, 0, 0.05); border-left: 2px solid var(--accent-red); }
 .accordion-row { background: #0a0a0a; border-bottom: 1px solid var(--border-light); }
 .accordion-content { padding: 16px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.05); border-radius: 4px; }
 .accordion-matches-list { display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
