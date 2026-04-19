@@ -2,17 +2,23 @@ import bgImg from '../assets/cricket_action.png';
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { io } from 'socket.io-client';
+import { ft20Schedule } from '../data/ft20Schedule';
 
 export default function MatchDetails() {
   const { matchId } = useParams();
   const navigate = useNavigate();
   
+  // Resolve teams from schedule if possible
+  const matchInfo = ft20Schedule.find(m => String(m.id) === String(matchId));
+  const t1 = matchInfo ? matchInfo.team1 : 'ICAT';
+  const t2 = matchInfo ? matchInfo.team2 : 'OPP';
+
   // Connection and State
   const [socketUrl, setSocketUrl] = useState('http://localhost:3000');
   const socketRef = useRef(null);
   const [globalState, setGlobalState] = useState({
     score: 0, wickets: 0, overs: 0.0,
-    battingTeam: 'ICAT', bowlingTeam: 'OPP',
+    battingTeam: t1, bowlingTeam: t2,
     squad1: Array(12).fill(''), squad2: Array(12).fill(''),
     keeper1: '', keeper2: '',
     striker: '', nonStriker: '', bowler: ''
