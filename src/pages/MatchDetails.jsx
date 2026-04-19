@@ -1,3 +1,4 @@
+import bgImg from '../assets/cricket_action.png';
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { io } from 'socket.io-client';
@@ -173,7 +174,7 @@ export default function MatchDetails() {
 
               {/* Bowling Team Configuration */}
               <div>
-                <h4 style={{ color: 'var(--text-main)', marginBottom: '16px' }}>{globalState.bowlingTeam} (Fielding)</h4>
+                <h4 style={{ color: '#fff', marginBottom: '16px' }}>{globalState.bowlingTeam} (Fielding)</h4>
                 <div style={{ display: 'grid', gap: '8px' }}>
                   {globalState.squad2.map((player, idx) => (
                     <input 
@@ -267,7 +268,7 @@ export default function MatchDetails() {
             {/* Custom Runs Panel */}
             {activeAction === 'Custom' && (
               <div className="slide-down" style={{ padding: '24px', background: 'rgba(255,255,255,0.02)', borderRadius: '8px', border: '1px solid var(--border-light)', marginBottom: '24px' }}>
-                <h4 style={{ marginBottom: '16px', color: 'var(--text-main)', fontWeight: 400 }}>Select Custom Runs (Overthrows/Penalties)</h4>
+                <h4 style={{ marginBottom: '16px', color: '#fff', fontWeight: 400 }}>Select Custom Runs (Overthrows/Penalties)</h4>
                 <div style={{ display: 'flex', gap: '12px' }}>
                   {[5, 7, 8].map(runs => (
                     <button key={runs} className="app-btn" onClick={() => { addRuns(runs); addBall(); setActiveAction(null); }}>

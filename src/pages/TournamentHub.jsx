@@ -1,3 +1,4 @@
+import bgImg from '../assets/tournament_banner.png';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import MatchCard from '../components/MatchCard';
@@ -21,7 +22,7 @@ export default function TournamentHub() {
   return (
     <main className="container match-center">
       {/* Cinematic Tournament Header */}
-      <section className="match-center-hero" style={{ padding: '64px', marginBottom: '48px' }}>
+      <section className="match-center-hero" style={{ padding: '64px', marginBottom: '48px' , backgroundImage: `linear-gradient(135deg, rgba(15,23,42,0.85), rgba(15,23,42,0.7)), url(${bgImg})`, backgroundSize: 'cover', backgroundPosition: 'center', color: '#fff', borderRadius: '12px', overflow: 'hidden', boxShadow: 'var(--shadow-lg)'}}>
         <h1 style={{ fontSize: '48px', color: 'var(--accent-gold)', marginBottom: '16px', letterSpacing: '2px' }}>
           {tournamentId === 'ft20-2026' ? 'FRIENDSHIP CUP T20 26' : 'TOURNAMENT HUB'}
         </h1>
@@ -125,7 +126,7 @@ export default function TournamentHub() {
             <div className="teams-grid">
               {ft20Teams.map((team, idx) => (
                 <div key={idx} className="card team-card">
-                  <h4 style={{ color: 'var(--text-main)', fontSize: '18px', marginBottom: '8px' }}>{team.name}</h4>
+                  <h4 style={{ color: '#fff', fontSize: '18px', marginBottom: '8px' }}>{team.name}</h4>
                   <span className="badge upcoming" style={{ marginBottom: '16px', display: 'inline-block' }}>{team.group}</span>
                   <ul className="squad-list">
                     {team.squad.map((player, pIdx) => (

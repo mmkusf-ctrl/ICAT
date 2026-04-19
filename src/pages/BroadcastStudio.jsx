@@ -1,3 +1,4 @@
+import bgImg from '../assets/cricket_action.png';
 import { useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
 
@@ -157,8 +158,8 @@ export default function BroadcastStudio() {
 
   return (
     <main className="container fade-in">
-      <section className="match-center-hero" style={{ padding: '32px', marginBottom: '24px' }}>
-        <h1 style={{ color: 'var(--text-main)', fontSize: '36px', marginBottom: '8px' }}>Captain's Broadcast Studio</h1>
+      <section className="match-center-hero" style={{ padding: '32px', marginBottom: '24px' , backgroundImage: `linear-gradient(135deg, rgba(15,23,42,0.85), rgba(15,23,42,0.7)), url(${bgImg})`, backgroundSize: 'cover', backgroundPosition: 'center', color: '#fff', borderRadius: '12px', overflow: 'hidden', boxShadow: 'var(--shadow-lg)'}}>
+        <h1 style={{ color: '#fff', fontSize: '36px', marginBottom: '8px' }}>Captain's Broadcast Studio</h1>
         <p style={{ color: 'var(--text-muted)' }}>Streams live at 1080p@30fps. Scoring is controlled remotely via the Match Center.</p>
       </section>
 
