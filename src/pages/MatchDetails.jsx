@@ -47,6 +47,10 @@ export default function MatchDetails() {
   const [fielder, setFielder] = useState('');
   const [recentBalls, setRecentBalls] = useState([]);
 
+  // End of Over State
+  const [showOverModal, setShowOverModal] = useState(false);
+  const [newBowler, setNewBowler] = useState('');
+
   // Toss State
   const [tossCaller, setTossCaller] = useState(t1);
   const [tossCall, setTossCall] = useState('Heads');
@@ -98,13 +102,17 @@ export default function MatchDetails() {
     else addTimelineBall('0', 'dot');
   };
 
-  const addBall = () => updateGlobal({ 
-    overs: (() => {
-      const o = globalState.overs;
-      const balls = Math.round((o - Math.floor(o)) * 10);
-      return balls >= 5 ? Math.floor(o) + 1.0 : o + 0.1;
-    })()
-  });
+  const addBall = () => {
+    const o = globalState.overs;
+    const balls = Math.round((o - Math.floor(o)) * 10);
+    const isOverComplete = balls >= 5;
+    
+    updateGlobal({ overs: isOverComplete ? Math.floor(o) + 1.0 : o + 0.1 });
+
+    if(isOverComplete) {
+      setTimeout(() => setShowOverModal(true), 300); // Trigger generic swap prompt
+    }
+  };
 
   const handleSimpleExtra = (runs, displayStr, type='extra', countsAsBall=false) => {
     updateGlobal({ score: globalState.score + runs });
@@ -131,6 +139,40 @@ export default function MatchDetails() {
 
   return (
     <main className="container match-center">
+      {/* Over Complete Forced Modal */}
+      {showOverModal && (
+        <div className="modal-overlay fade-in" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(15, 23, 42, 0.85)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div className="card" style={{ padding: '32px', background: 'var(--bg-card)', width: '400px', borderRadius: '12px', boxShadow: '0 20px 40px rgba(0,0,0,0.5)' }}>
+            <h3 style={{ color: 'var(--accent-primary)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '20px' }}>
+              <i className="fa-solid fa-flag-checkered"></i> Over Completed!
+            </h3>
+            <p style={{ color: 'var(--text-main)', marginBottom: '24px', fontSize: '14px', lineHeight: 1.5 }}>
+              That's the end of the over. Please assign the next bowler to continue scoring.
+            </p>
+            <select 
+              value={newBowler} 
+              onChange={(e) => setNewBowler(e.target.value)} 
+              style={{ width: '100%', padding: '12px', background: '#fff', border: '1px solid var(--border-light)', color: 'var(--text-main)', borderRadius: '6px', marginBottom: '24px', outline: 'none' }}
+            >
+              <option value="">Select Next Bowler...</option>
+              {currentFieldingSquad.map((p, i) => p && <option key={i} value={p}>{p}</option>)}
+            </select>
+            <button 
+              className="app-btn" 
+              onClick={() => {
+                if(!newBowler) return alert('Please explicitly select a bowler before continuing!');
+                updateGlobal({ bowler: newBowler });
+                setShowOverModal(false);
+                setNewBowler('');
+              }} 
+              style={{ width: '100%', justifyContent: 'center', background: '#059669', color: '#fff', padding: '14px', fontWeight: 'bold', fontSize: '15px' }}
+            >
+              Confirm Next Bowler
+            </button>
+          </div>
+        </div>
+      )}
+
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
         <button className="back-btn" onClick={() => navigate(-1)} style={{ marginBottom: 0 }}>
           &larr; Back to Dashboard
