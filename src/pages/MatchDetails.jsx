@@ -139,20 +139,20 @@ export default function MatchDetails() {
             <h3 className="pane-title">Match Configuration & Squads</h3>
             
             <div style={{ marginBottom: '24px' }}>
-              <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-muted)' }}>Backend Server URL</label>
+              <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-muted)', fontWeight: 500 }}>Backend Server URL</label>
               <input 
                 type="text" 
                 value={socketUrl} 
                 onChange={(e) => setSocketUrl(e.target.value)} 
-                style={{ width: '100%', padding: '12px', background: 'var(--bg-page)', border: '1px solid var(--border-light)', color: '#fff', borderRadius: '4px' }}
+                style={{ width: '100%', padding: '12px', background: 'var(--bg-page)', border: '1px solid var(--border-primary)', color: 'var(--text-main)', borderRadius: '6px', outline: 'none' }}
               />
             </div>
 
-            <div className="grid two" style={{ gap: '24px', marginBottom: '32px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px', marginBottom: '32px' }}>
               {/* Batting Team Configuration */}
-              <div>
-                <h4 style={{ color: 'var(--accent-red)', marginBottom: '16px' }}>{globalState.battingTeam} (Batting)</h4>
-                <div style={{ display: 'grid', gap: '8px' }}>
+              <div className="card" style={{ padding: '24px', boxShadow: 'var(--shadow-glass)' }}>
+                <h4 style={{ color: 'var(--accent-secondary)', marginBottom: '20px', fontSize: '18px', borderBottom: '1px solid var(--border-light)', paddingBottom: '12px' }}>{globalState.battingTeam} (Batting)</h4>
+                <div style={{ display: 'grid', gap: '12px' }}>
                   {globalState.squad1.map((player, idx) => (
                     <input 
                       key={`s1-${idx}`}
@@ -164,24 +164,24 @@ export default function MatchDetails() {
                         newSquad[idx] = e.target.value;
                         updateGlobal({ squad1: newSquad });
                       }}
-                      style={{ padding: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border-light)', color: '#fff', borderRadius: '2px' }}
+                      style={{ padding: '10px 12px', background: 'var(--bg-page)', border: '1px solid var(--border-light)', color: 'var(--text-main)', borderRadius: '4px', fontSize: '14px', outline: 'none', transition: 'border-color 0.3s' }}
                     />
                   ))}
                   <select 
                     value={globalState.keeper1} 
                     onChange={(e) => updateGlobal({ keeper1: e.target.value })}
-                    style={{ marginTop: '16px', padding: '8px', background: 'rgba(255,255,255,0.05)', color: '#fff' }}
+                    style={{ marginTop: '16px', padding: '12px', background: 'rgba(29, 78, 216, 0.05)', border: '1px solid var(--border-primary)', color: 'var(--accent-primary)', borderRadius: '4px', fontWeight: 500 }}
                   >
-                    <option value="">Select Wicket Keeper</option>
+                    <option value="">Assign Wicket Keeper</option>
                     {globalState.squad1.map((p, i) => p && <option key={i} value={p}>{p}</option>)}
                   </select>
                 </div>
               </div>
 
               {/* Bowling Team Configuration */}
-              <div>
-                <h4 style={{ color: '#fff', marginBottom: '16px' }}>{globalState.bowlingTeam} (Fielding)</h4>
-                <div style={{ display: 'grid', gap: '8px' }}>
+              <div className="card" style={{ padding: '24px', boxShadow: 'var(--shadow-glass)' }}>
+                <h4 style={{ color: 'var(--accent-primary)', marginBottom: '20px', fontSize: '18px', borderBottom: '1px solid var(--border-light)', paddingBottom: '12px' }}>{globalState.bowlingTeam} (Fielding)</h4>
+                <div style={{ display: 'grid', gap: '12px' }}>
                   {globalState.squad2.map((player, idx) => (
                     <input 
                       key={`s2-${idx}`}
@@ -193,15 +193,15 @@ export default function MatchDetails() {
                         newSquad[idx] = e.target.value;
                         updateGlobal({ squad2: newSquad });
                       }}
-                      style={{ padding: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border-light)', color: '#fff', borderRadius: '2px' }}
+                      style={{ padding: '10px 12px', background: 'var(--bg-page)', border: '1px solid var(--border-light)', color: 'var(--text-main)', borderRadius: '4px', fontSize: '14px', outline: 'none', transition: 'border-color 0.3s' }}
                     />
                   ))}
                   <select 
                     value={globalState.keeper2} 
                     onChange={(e) => updateGlobal({ keeper2: e.target.value })}
-                    style={{ marginTop: '16px', padding: '8px', background: 'rgba(255,255,255,0.05)', color: '#fff' }}
+                    style={{ marginTop: '16px', padding: '12px', background: 'rgba(29, 78, 216, 0.05)', border: '1px solid var(--border-primary)', color: 'var(--accent-primary)', borderRadius: '4px', fontWeight: 500 }}
                   >
-                    <option value="">Select Wicket Keeper</option>
+                    <option value="">Assign Wicket Keeper</option>
                     {globalState.squad2.map((p, i) => p && <option key={i} value={p}>{p}</option>)}
                   </select>
                 </div>
@@ -209,18 +209,18 @@ export default function MatchDetails() {
             </div>
 
             {/* Active Players Assignment */}
-            <div style={{ padding: '24px', border: '1px solid var(--border-light)', borderRadius: '4px', background: 'rgba(0,0,0,0.2)' }}>
-              <h4 style={{ marginBottom: '16px', color: 'var(--accent-red)' }}>Assign Active Play</h4>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px' }}>
-                <select value={globalState.striker} onChange={(e) => updateGlobal({ striker: e.target.value })} style={{ padding: '8px', background: '#111', color: '#fff' }}>
+            <div style={{ padding: '24px', border: '1px solid var(--border-primary)', borderRadius: '8px', background: 'rgba(29, 78, 216, 0.02)' }}>
+              <h4 style={{ marginBottom: '16px', color: 'var(--accent-primary)', fontSize: '18px' }}>Assign Active Play Phase</h4>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '20px' }}>
+                <select value={globalState.striker} onChange={(e) => updateGlobal({ striker: e.target.value })} style={{ padding: '12px', background: '#fff', border: '1px solid var(--border-light)', color: 'var(--text-main)', borderRadius: '4px', boxShadow: 'var(--shadow-glass)' }}>
                   <option value="">Select Striker...</option>
                   {globalState.squad1.map((p, i) => p && <option key={i} value={p}>{p}</option>)}
                 </select>
-                <select value={globalState.nonStriker} onChange={(e) => updateGlobal({ nonStriker: e.target.value })} style={{ padding: '8px', background: '#111', color: '#fff' }}>
+                <select value={globalState.nonStriker} onChange={(e) => updateGlobal({ nonStriker: e.target.value })} style={{ padding: '12px', background: '#fff', border: '1px solid var(--border-light)', color: 'var(--text-main)', borderRadius: '4px', boxShadow: 'var(--shadow-glass)' }}>
                   <option value="">Select Non-Striker...</option>
                   {globalState.squad1.map((p, i) => p && <option key={i} value={p}>{p}</option>)}
                 </select>
-                <select value={globalState.bowler} onChange={(e) => updateGlobal({ bowler: e.target.value })} style={{ padding: '8px', background: '#111', color: '#fff' }}>
+                <select value={globalState.bowler} onChange={(e) => updateGlobal({ bowler: e.target.value })} style={{ padding: '12px', background: '#fff', border: '1px solid var(--border-light)', color: 'var(--text-main)', borderRadius: '4px', boxShadow: 'var(--shadow-glass)' }}>
                   <option value="">Select Bowler...</option>
                   {globalState.squad2.map((p, i) => p && <option key={i} value={p}>{p}</option>)}
                 </select>
