@@ -1,5 +1,5 @@
 :root {
-  /* Premium Crisp Light Theme */
+  /* Premium Crisp Light Theme (Blue & Orange Edition) */
   --bg-page: #f8fafc; 
   --bg-card: rgba(255, 255, 255, 0.85);
   --bg-nav: rgba(255, 255, 255, 0.95);
@@ -7,22 +7,22 @@
   --text-main: #0f172a;
   --text-muted: #64748b;
   
-  --accent-primary: #1e3a8a; /* Deep Navy Blue */
-  --accent-secondary: #3b82f6; 
-  --accent-danger: #e63946; 
+  --accent-primary: #1d4ed8; /* Bold Blue */
+  --accent-secondary: #f97316; /* Vibrant Orange */
+  --accent-danger: #ea580c; /* Deeper Orange for alerts/buttons */
   --accent-silver: #94a3b8;
   
   /* Aliases for backwards compatibility */
-  --accent-gold: var(--accent-primary);
+  --accent-gold: var(--accent-secondary);
   --accent-red: var(--accent-danger);
-  --accent-cyan: #0891b2;
+  --accent-cyan: #0284c7; /* Lighter Blue */
   --accent-green: #059669;
   
   --border-light: rgba(15, 23, 42, 0.1); 
-  --border-gold: rgba(30, 58, 138, 0.2);
+  --border-primary: rgba(29, 78, 216, 0.2);
   
   --shadow-lg: 0 10px 25px rgba(15, 23, 42, 0.05);
-  --shadow-glow: 0 10px 30px rgba(30, 58, 138, 0.1);
+  --shadow-glow: 0 10px 30px rgba(249, 115, 22, 0.15); /* Orange glow */
   --shadow-glass: inset 0 0 20px rgba(0, 0, 0, 0.02);
   
   --font-heading: 'Outfit', sans-serif;
