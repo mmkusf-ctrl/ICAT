@@ -33,12 +33,20 @@ export default function MatchDetails() {
   const tabs = ['Settings', 'Scoring Panel', 'Squads', 'Live', 'Scorecard', 'Commentary'];
 
   // Scoring Modals State
-  const [activeAction, setActiveAction] = useState(null); // 'Wd', 'Byes', 'NB', 'Wicket'
-  const [subAction, setSubAction] = useState(null); // 'Caught', 'Runout'
+  const [activeAction, setActiveAction] = useState(null); // 'Wd', 'B', 'LB', 'NB', 'Wicket', 'Penalty', 'Custom'
+  const [subAction, setSubAction] = useState(null); // specific wicket type
   const [fielder, setFielder] = useState('');
+  const [recentBalls, setRecentBalls] = useState([]);
 
   // Helper Functions
-  const addRuns = (r) => updateGlobal({ score: globalState.score + r });
+  const addTimelineBall = (val, type='run') => setRecentBalls(prev => [...prev.slice(-15), {val, type}]);
+
+  const addRuns = (r) => {
+    updateGlobal({ score: globalState.score + r });
+    if(r > 0) addTimelineBall(r, 'run');
+    else addTimelineBall('0', 'dot');
+  };
+
   const addBall = () => updateGlobal({ 
     overs: (() => {
       const o = globalState.overs;
@@ -47,17 +55,25 @@ export default function MatchDetails() {
     })()
   });
 
-  const handleSimpleExtra = (runs) => {
+  const handleSimpleExtra = (runs, displayStr, type='extra', countsAsBall=false) => {
     updateGlobal({ score: globalState.score + runs });
+    addTimelineBall(displayStr, type);
+    if(countsAsBall) addBall();
     setActiveAction(null);
   };
 
   const handleWicket = () => {
     updateGlobal({ wickets: globalState.wickets + 1 });
+    addTimelineBall('W', 'wicket');
     addBall();
     setActiveAction(null);
     setSubAction(null);
     setFielder('');
+  };
+
+  const undoLastAction = () => {
+    // simplified undo visual
+    setRecentBalls(prev => prev.slice(0, -1));
   };
 
   const currentFieldingSquad = globalState.bowlingTeam === 'OPP' ? globalState.squad2 : globalState.squad1;
@@ -210,130 +226,165 @@ export default function MatchDetails() {
         {activeTab === 'scoring panel' && (
           <div className="card tab-pane fade-in">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h3 className="pane-title">Professional Score Dashboard</h3>
-              <div style={{ fontSize: '14px', color: 'var(--text-muted)' }}>
-                Batting: <strong>{globalState.battingTeam}</strong>
-              </div>
+               <h3 className="pane-title">Professional Score Dashboard</h3>
+               <div style={{ fontSize: '14px', color: 'var(--text-muted)' }}>
+                 Batting: <strong>{globalState.battingTeam}</strong>
+               </div>
             </div>
 
-            {/* Base Scoring Buttons */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '12px', marginBottom: '24px' }}>
-              {[0, 1, 2, 3, 4, 6].map(runs => (
-                <button 
-                  key={`run-${runs}`} 
-                  className="app-btn" 
-                  onClick={() => { addRuns(runs); addBall(); }} 
-                  style={{ justifyContent: 'center', fontSize: '18px', fontWeight: 'bold' }}
-                >
-                  +{runs}
-                </button>
+            {/* Recent Balls Timeline */}
+            <div className="recent-balls">
+              <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', marginRight: '8px' }}>Recent:</span>
+              {recentBalls.length === 0 ? <span style={{color: '#555', fontSize: '13px'}}>No actions yet</span> : recentBalls.map((b, i) => (
+                <div key={i} className={`timeline-ball ${b.type === 'wicket' ? 'w' : (b.type === 'extra' || b.val >= 4 ? 'b' : '')}`} title={`${b.type}`}>
+                  {b.val}
+                </div>
               ))}
             </div>
 
-            {/* Extra Options Buttons */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px', marginBottom: '24px' }}>
-              <button className="app-btn" onClick={() => setActiveAction(activeAction === 'Wd' ? null : 'Wd')} style={{ justifyContent: 'center', background: activeAction === 'Wd' ? 'var(--accent-red)' : '' }}>Wide (Wd)</button>
-              <button className="app-btn" onClick={() => setActiveAction(activeAction === 'Byes' ? null : 'Byes')} style={{ justifyContent: 'center', background: activeAction === 'Byes' ? 'var(--accent-red)' : '' }}>Byes/LB</button>
-              <button className="app-btn" onClick={() => setActiveAction(activeAction === 'NB' ? null : 'NB')} style={{ justifyContent: 'center', background: activeAction === 'NB' ? 'var(--accent-red)' : '' }}>No Ball (NB)</button>
-              <button className="app-btn" onClick={() => setActiveAction(activeAction === 'Wicket' ? null : 'Wicket')} style={{ justifyContent: 'center', background: activeAction === 'Wicket' ? 'var(--accent-red)' : 'rgba(230, 57, 70, 0.2)' }}>WICKET!</button>
+            {/* Main Scoring Grid */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginTop: '24px', marginBottom: '24px' }}>
+               {/* 0 and Custom Runs */}
+               <button className="scoring-grid-btn" onClick={() => { addRuns(0); addBall(); }}>0<span>Dot</span></button>
+               <button className="scoring-grid-btn" onClick={() => { addRuns(1); addBall(); }}>1<span>Run</span></button>
+               <button className="scoring-grid-btn" onClick={() => { addRuns(2); addBall(); }}>2<span>Runs</span></button>
+               <button className="scoring-grid-btn" onClick={() => { addRuns(3); addBall(); }}>3<span>Runs</span></button>
+               
+               <button className="scoring-grid-btn" onClick={() => { addRuns(4); addBall(); }}>4<span>Boundary</span></button>
+               <button className="scoring-grid-btn" onClick={() => { addRuns(6); addBall(); }}>6<span>Sixer</span></button>
+               <button className="scoring-grid-btn" onClick={() => { setActiveAction(activeAction === 'Custom' ? null : 'Custom'); setSubAction(null); }} style={{ background: activeAction === 'Custom' ? 'var(--accent-primary)' : '', color: activeAction === 'Custom' ? '#000' : '' }}><span>Custom</span>Runs</button>
+               
+               {/* Extras Primary Nav */}
+               <button className="scoring-grid-btn" onClick={() => { setActiveAction(activeAction === 'Extras' ? null : 'Extras'); setSubAction(null); }} style={{ background: activeAction === 'Extras' ? 'var(--accent-primary)' : '', color: activeAction === 'Extras' ? '#000' : '' }}><span>Extra</span>Options</button>
             </div>
 
-            {/* Render Contextual Sub-Modals Based on Active Action */}
-            {activeAction === 'Wd' && (
-              <div style={{ padding: '16px', background: 'rgba(255,255,255,0.05)', borderRadius: '4px', marginBottom: '24px' }}>
-                <h4 style={{ marginBottom: '16px', color: 'var(--text-muted)' }}>Select Wide Value</h4>
-                <div style={{ display: 'flex', gap: '8px' }}>
-                  <button className="app-btn" onClick={() => handleSimpleExtra(1)}>Wd</button>
-                  <button className="app-btn" onClick={() => handleSimpleExtra(2)}>Wd+1</button>
-                  <button className="app-btn" onClick={() => handleSimpleExtra(3)}>Wd+2</button>
-                  <button className="app-btn" onClick={() => handleSimpleExtra(4)}>Wd+3</button>
-                  <button className="app-btn" onClick={() => handleSimpleExtra(5)}>Wd+4</button>
-                </div>
-              </div>
-            )}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '16px', marginBottom: '24px' }}>
+              <button className={`scoring-grid-btn ${activeAction === 'Wicket' ? 'active-danger' : ''}`} onClick={() => { setActiveAction(activeAction === 'Wicket' ? null : 'Wicket'); setSubAction(null); }} style={{ border: '1px solid rgba(230,57,70,0.4)', color: activeAction === 'Wicket' ? '#fff' : 'var(--accent-danger)' }}>
+                 DISMISSAL (WICKET)
+              </button>
+            </div>
 
-            {activeAction === 'Byes' && (
-              <div style={{ padding: '16px', background: 'rgba(255,255,255,0.05)', borderRadius: '4px', marginBottom: '24px' }}>
-                <h4 style={{ marginBottom: '16px', color: 'var(--text-muted)' }}>Select Byes Value (Ball Counted)</h4>
-                <div style={{ display: 'flex', gap: '8px' }}>
-                  {[1, 2, 3, 4, 5, 6].map(val => (
-                    <button key={val} className="app-btn" onClick={() => { handleSimpleExtra(val); addBall(); }}>{val}</button>
+            {/* Custom Runs Panel */}
+            {activeAction === 'Custom' && (
+              <div className="slide-down" style={{ padding: '24px', background: 'rgba(255,255,255,0.02)', borderRadius: '8px', border: '1px solid var(--border-light)', marginBottom: '24px' }}>
+                <h4 style={{ marginBottom: '16px', color: 'var(--text-main)', fontWeight: 400 }}>Select Custom Runs (Overthrows/Penalties)</h4>
+                <div style={{ display: 'flex', gap: '12px' }}>
+                  {[5, 7, 8].map(runs => (
+                    <button key={runs} className="app-btn" onClick={() => { addRuns(runs); addBall(); setActiveAction(null); }}>
+                      +{runs} Runs
+                    </button>
                   ))}
                 </div>
               </div>
             )}
 
-            {activeAction === 'NB' && (
-              <div style={{ padding: '16px', background: 'rgba(255,255,255,0.05)', borderRadius: '4px', marginBottom: '24px' }}>
-                <h4 style={{ marginBottom: '16px', color: 'var(--text-muted)' }}>Select No Ball Value</h4>
-                <div style={{ display: 'flex', gap: '8px' }}>
-                  <button className="app-btn" onClick={() => handleSimpleExtra(1)}>NB</button>
-                  <button className="app-btn" onClick={() => handleSimpleExtra(2)}>Nb+1</button>
-                  <button className="app-btn" onClick={() => handleSimpleExtra(3)}>Nb+2</button>
-                  <button className="app-btn" onClick={() => handleSimpleExtra(4)}>Nb+3</button>
-                  <button className="app-btn" onClick={() => handleSimpleExtra(5)}>Nb+4</button>
-                  <button className="app-btn" onClick={() => handleSimpleExtra(7)}>Nb+6</button>
+            {/* Extras Panel */}
+            {activeAction === 'Extras' && (
+              <div className="slide-down" style={{ padding: '24px', background: 'rgba(212,175,55,0.05)', borderRadius: '8px', border: '1px solid rgba(212,175,55,0.2)', marginBottom: '24px' }}>
+                <h4 style={{ marginBottom: '16px', color: 'var(--accent-primary)', fontWeight: 400 }}>Extras Sub-Menu</h4>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '12px' }}>
+                  <button className="app-btn" onClick={() => setSubAction(subAction === 'Wd' ? null : 'Wd')} style={{ background: subAction === 'Wd' ? '#fff' : '', color: subAction === 'Wd' ? '#000' : '' }}>Wide</button>
+                  <button className="app-btn" onClick={() => setSubAction(subAction === 'NB' ? null : 'NB')} style={{ background: subAction === 'NB' ? '#fff' : '', color: subAction === 'NB' ? '#000' : '' }}>No Ball</button>
+                  <button className="app-btn" onClick={() => setSubAction(subAction === 'B' ? null : 'B')} style={{ background: subAction === 'B' ? '#fff' : '', color: subAction === 'B' ? '#000' : '' }}>Byes</button>
+                  <button className="app-btn" onClick={() => setSubAction(subAction === 'LB' ? null : 'LB')} style={{ background: subAction === 'LB' ? '#fff' : '', color: subAction === 'LB' ? '#000' : '' }}>Leg Byes</button>
+                  <button className="app-btn" onClick={() => setSubAction(subAction === 'Pen' ? null : 'Pen')} style={{ borderColor: 'var(--accent-danger)', background: subAction === 'Pen' ? 'var(--accent-danger)' : '', color: subAction === 'Pen' ? '#fff' : '' }}>Penalty</button>
                 </div>
+
+                {subAction === 'Wd' && (
+                  <div className="slide-down" style={{ marginTop: '20px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    {[1, 2, 3, 4, 5].map(v => (
+                       <button key={`wd-${v}`} className="app-btn" onClick={() => handleSimpleExtra(v, `Wd${v>1?'+'+(v-1):''}`, 'extra', false)} style={{ background: '#111' }}>Wd+{v-1}</button>
+                    ))}
+                  </div>
+                )}
+
+                {subAction === 'NB' && (
+                  <div className="slide-down" style={{ marginTop: '20px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    {[1, 2, 3, 4, 5, 7].map(v => (
+                       <button key={`nb-${v}`} className="app-btn" onClick={() => handleSimpleExtra(v, `NB${v>1?'+'+(v-1):''}`, 'extra', false)} style={{ background: '#111' }}>NB+{v-1}</button>
+                    ))}
+                  </div>
+                )}
+
+                {subAction === 'B' && (
+                  <div className="slide-down" style={{ marginTop: '20px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    {[1, 2, 3, 4, 5].map(v => (
+                       <button key={`b-${v}`} className="app-btn" onClick={() => handleSimpleExtra(v, `${v}B`, 'extra', true)} style={{ background: '#111' }}>{v} Bye</button>
+                    ))}
+                  </div>
+                )}
+
+                {subAction === 'LB' && (
+                  <div className="slide-down" style={{ marginTop: '20px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    {[1, 2, 3, 4, 5].map(v => (
+                       <button key={`lb-${v}`} className="app-btn" onClick={() => handleSimpleExtra(v, `${v}LB`, 'extra', true)} style={{ background: '#111' }}>{v} Leg Bye</button>
+                    ))}
+                  </div>
+                )}
+
+                {subAction === 'Pen' && (
+                  <div className="slide-down" style={{ marginTop: '20px', display: 'flex', gap: '8px' }}>
+                    <button className="app-btn" onClick={() => handleSimpleExtra(5, 'Pen', 'extra', false)} style={{ borderColor: 'var(--accent-danger)' }}>+5 Penalty Runs</button>
+                  </div>
+                )}
               </div>
             )}
 
+            {/* Wicket Panel */}
             {activeAction === 'Wicket' && (
-              <div style={{ padding: '24px', background: 'rgba(230, 57, 70, 0.1)', borderRadius: '4px', marginBottom: '24px', border: '1px solid rgba(230, 57, 70, 0.3)' }}>
-                <h4 style={{ marginBottom: '16px', color: 'var(--accent-red)' }}>Wicket Type</h4>
+              <div className="slide-down" style={{ padding: '24px', background: 'rgba(230, 57, 70, 0.05)', borderRadius: '8px', border: '1px solid rgba(230, 57, 70, 0.3)', marginBottom: '24px' }}>
+                <h4 style={{ marginBottom: '16px', color: 'var(--accent-danger)' }}>Select Dismissal Type</h4>
                 
-                {/* Level 1: Wicket Type */}
-                <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
-                  {['Caught', 'Runout', 'Mankad', 'Bowled', 'LBW'].map(type => (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px', marginBottom: '20px' }}>
+                  {['Caught', 'Bowled', 'LBW', 'Run Out', 'Stumped', 'Hit Wicket', 'Caught & Bowled', 'Ret Hurt', 'Obstruct Field', 'Mankad'].map(type => (
                     <button 
                       key={type} 
                       className="app-btn" 
                       onClick={() => setSubAction(type)}
-                      style={{ background: subAction === type ? '#fff' : '', color: subAction === type ? '#000' : '' }}
+                      style={{ background: subAction === type ? 'var(--accent-danger)' : '#111', color: subAction === type ? '#fff' : '', borderColor: subAction === type ? 'var(--accent-danger)' : '' }}
                     >
                       {type}
                     </button>
                   ))}
                 </div>
 
-                {/* Level 2: Wicket Context (Caught/Runout) */}
-                {subAction === 'Caught' && (
-                  <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid var(--border-light)' }}>
-                    <p style={{ marginBottom: '8px', color: 'var(--text-muted)' }}>Caught By Fielder:</p>
+                {['Caught', 'Stumped'].includes(subAction) && (
+                  <div className="slide-down" style={{ paddingTop: '16px', borderTop: '1px solid rgba(230,57,70,0.2)' }}>
+                    <p style={{ marginBottom: '8px', color: 'var(--text-muted)' }}>Fielder / Keeper Involved:</p>
                     <div style={{ display: 'flex', gap: '16px' }}>
-                      <select value={fielder} onChange={e => setFielder(e.target.value)} style={{ padding: '8px', background: '#111', color: '#fff', flex: 1 }}>
+                      <select value={fielder} onChange={e => setFielder(e.target.value)} style={{ padding: '12px', background: 'rgba(0,0,0,0.5)', border: '1px solid var(--border-light)', color: '#fff', flex: 1, borderRadius: '4px' }}>
                         <option value="">Select Fielder...</option>
                         {currentFieldingSquad.map((p, i) => p && <option key={i} value={p}>{p}</option>)}
                       </select>
-                      <button className="app-btn" onClick={handleWicket} disabled={!fielder}>Confirm Catch</button>
+                      <button className="app-btn" onClick={handleWicket} disabled={!fielder} style={{ borderColor: 'var(--accent-danger)' }}>Confirm {subAction}</button>
                     </div>
                   </div>
                 )}
 
-                {subAction === 'Runout' && (
-                  <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid var(--border-light)' }}>
-                    <p style={{ marginBottom: '8px', color: 'var(--text-muted)' }}>Runs Completed Before Runout:</p>
-                    <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
-                      {['W', 'W+1', 'W+2', 'W+3', 'W+4'].map((wType, i) => (
-                        <button key={wType} className="app-btn" onClick={() => updateGlobal({ score: globalState.score + i })}>
-                          {wType}
-                        </button>
-                      ))}
-                    </div>
-                    <p style={{ marginBottom: '8px', color: 'var(--text-muted)' }}>Fielder Involved:</p>
-                    <div style={{ display: 'flex', gap: '16px' }}>
-                      <select value={fielder} onChange={e => setFielder(e.target.value)} style={{ padding: '8px', background: '#111', color: '#fff', flex: 1 }}>
-                        <option value="">Select Fielder...</option>
-                        {currentFieldingSquad.map((p, i) => p && <option key={i} value={p}>{p}</option>)}
-                      </select>
-                      <button className="app-btn" onClick={handleWicket} disabled={!fielder}>Confirm Runout</button>
-                    </div>
+                {subAction === 'Run Out' && (
+                  <div className="slide-down" style={{ paddingTop: '16px', borderTop: '1px solid rgba(230,57,70,0.2)' }}>
+                     <p style={{ marginBottom: '8px', color: 'var(--text-muted)' }}>Runs Completed Before Runout:</p>
+                     <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
+                       {['W', 'W+1', 'W+2', 'W+3'].map((wType, i) => (
+                         <button key={wType} className="app-btn" onClick={() => updateGlobal({ score: globalState.score + i })}>
+                           {wType}
+                         </button>
+                       ))}
+                     </div>
+                     <p style={{ marginBottom: '8px', color: 'var(--text-muted)' }}>Fielder Involved:</p>
+                     <div style={{ display: 'flex', gap: '16px' }}>
+                       <select value={fielder} onChange={e => setFielder(e.target.value)} style={{ padding: '12px', background: 'rgba(0,0,0,0.5)', border: '1px solid var(--border-light)', color: '#fff', flex: 1, borderRadius: '4px' }}>
+                         <option value="">Select Fielder...</option>
+                         {currentFieldingSquad.map((p, i) => p && <option key={i} value={p}>{p}</option>)}
+                       </select>
+                       <button className="app-btn" onClick={handleWicket} disabled={!fielder} style={{ borderColor: 'var(--accent-danger)' }}>Confirm Run Out</button>
+                     </div>
                   </div>
                 )}
 
-                {/* Level 2: Direct Confirm (Mankad, Bowled, LBW) */}
-                {['Mankad', 'Bowled', 'LBW'].includes(subAction) && (
-                  <div style={{ marginTop: '16px' }}>
-                    <button className="app-btn" onClick={handleWicket} style={{ background: 'var(--accent-red)', color: '#fff' }}>Confirm {subAction}</button>
+                {['Bowled', 'LBW', 'Hit Wicket', 'Caught & Bowled', 'Ret Hurt', 'Obstruct Field', 'Mankad'].includes(subAction) && (
+                  <div className="slide-down" style={{ paddingTop: '16px', borderTop: '1px solid rgba(230,57,70,0.2)' }}>
+                    <button className="app-btn" onClick={handleWicket} style={{ background: 'var(--accent-danger)', color: '#fff' }}>Confirm {subAction}</button>
                   </div>
                 )}
               </div>
@@ -342,10 +393,10 @@ export default function MatchDetails() {
             {/* Manual Edit Failsafe */}
             <div style={{ marginTop: '48px', paddingTop: '24px', borderTop: '1px dashed var(--border-light)' }}>
               <h4 style={{ color: 'var(--text-muted)', marginBottom: '16px', fontSize: '14px', textTransform: 'uppercase' }}>Manual Overrides</h4>
-              <div style={{ display: 'flex', gap: '16px' }}>
-                <button className="app-btn" onClick={() => updateGlobal({ score: Math.max(0, globalState.score - 1) })} style={{ padding: '8px', fontSize: '11px' }}>-1 Run (Undo)</button>
-                <button className="app-btn" onClick={() => updateGlobal({ wickets: Math.max(0, globalState. wickets - 1) })} style={{ padding: '8px', fontSize: '11px' }}>-1 Wicket (Undo)</button>
-                <button className="app-btn" onClick={() => updateGlobal({ score: 0, wickets: 0, overs: 0.0 })} style={{ padding: '8px', fontSize: '11px', borderColor: '#a1a1aa', color: '#a1a1aa' }}>Reset Match</button>
+              <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+                <button className="app-btn" onClick={() => { updateGlobal({ score: Math.max(0, globalState.score - 1) }); undoLastAction(); }} style={{ padding: '8px 16px', fontSize: '11px' }}>Undo Last Run</button>
+                <button className="app-btn" onClick={() => { updateGlobal({ wickets: Math.max(0, globalState.wickets - 1) }); undoLastAction(); }} style={{ padding: '8px 16px', fontSize: '11px' }}>Undo Wicket</button>
+                <button className="app-btn" onClick={() => { updateGlobal({ score: 0, wickets: 0, overs: 0.0 }); setRecentBalls([]); }} style={{ padding: '8px 16px', fontSize: '11px', borderColor: '#555', color: '#888' }}>Reset Match</button>
               </div>
             </div>
           </div>
