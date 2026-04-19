@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import { ft20Schedule } from '../data/ft20Schedule';
+import { ft20Teams } from '../data/ft20Teams';
 
 export default function MatchDetails() {
   const { matchId } = useParams();
@@ -260,12 +261,24 @@ export default function MatchDetails() {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px', marginBottom: '32px' }}>
               {/* Batting Team Configuration */}
               <div className="card" style={{ padding: '24px', boxShadow: 'var(--shadow-glass)' }}>
-                <h4 style={{ color: 'var(--accent-secondary)', marginBottom: '20px', fontSize: '18px', borderBottom: '1px solid var(--border-light)', paddingBottom: '12px' }}>{globalState.battingTeam} (Batting)</h4>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid var(--border-light)', paddingBottom: '12px' }}>
+                  <h4 style={{ color: 'var(--accent-secondary)', fontSize: '18px', margin: 0 }}>{globalState.battingTeam} (Batting)</h4>
+                  <button className="app-btn" onClick={() => {
+                    const dbTeam = ft20Teams.find(t => t.name === globalState.battingTeam);
+                    if(dbTeam) updateGlobal({ squad1: [...dbTeam.squad, ...Array(12).fill('')].slice(0, 12) });
+                  }} style={{ padding: '6px 10px', fontSize: '11px', background: 'var(--bg-page)', border: '1px solid var(--border-light)', color: 'var(--accent-secondary)', fontWeight: 600 }} title="Auto-fill from Database">
+                    <i className="fa-solid fa-cloud-arrow-down"></i> Auto-Fill
+                  </button>
+                </div>
+                <datalist id="team1-roster">
+                  {ft20Teams.find(t => t.name === globalState.battingTeam)?.squad.map(p => <option key={p} value={p} />)}
+                </datalist>
                 <div style={{ display: 'grid', gap: '12px' }}>
                   {globalState.squad1.map((player, idx) => (
                     <input 
                       key={`s1-${idx}`}
                       type="text" 
+                      list="team1-roster" 
                       placeholder={idx === 11 ? "12th Man" : `Player ${idx + 1}`}
                       value={player}
                       onChange={(e) => {
@@ -289,12 +302,24 @@ export default function MatchDetails() {
 
               {/* Bowling Team Configuration */}
               <div className="card" style={{ padding: '24px', boxShadow: 'var(--shadow-glass)' }}>
-                <h4 style={{ color: 'var(--accent-primary)', marginBottom: '20px', fontSize: '18px', borderBottom: '1px solid var(--border-light)', paddingBottom: '12px' }}>{globalState.bowlingTeam} (Fielding)</h4>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid var(--border-light)', paddingBottom: '12px' }}>
+                  <h4 style={{ color: 'var(--accent-primary)', fontSize: '18px', margin: 0 }}>{globalState.bowlingTeam} (Fielding)</h4>
+                  <button className="app-btn" onClick={() => {
+                    const dbTeam = ft20Teams.find(t => t.name === globalState.bowlingTeam);
+                    if(dbTeam) updateGlobal({ squad2: [...dbTeam.squad, ...Array(12).fill('')].slice(0, 12) });
+                  }} style={{ padding: '6px 10px', fontSize: '11px', background: 'var(--bg-page)', border: '1px solid var(--border-light)', color: 'var(--accent-primary)', fontWeight: 600 }} title="Auto-fill from Database">
+                    <i className="fa-solid fa-cloud-arrow-down"></i> Auto-Fill
+                  </button>
+                </div>
+                <datalist id="team2-roster">
+                  {ft20Teams.find(t => t.name === globalState.bowlingTeam)?.squad.map(p => <option key={p} value={p} />)}
+                </datalist>
                 <div style={{ display: 'grid', gap: '12px' }}>
                   {globalState.squad2.map((player, idx) => (
                     <input 
                       key={`s2-${idx}`}
                       type="text" 
+                      list="team2-roster" 
                       placeholder={idx === 11 ? "12th Man" : `Player ${idx + 1}`}
                       value={player}
                       onChange={(e) => {
