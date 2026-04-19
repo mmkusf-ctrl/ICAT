@@ -2,16 +2,25 @@ import { Link } from 'react-router-dom'
 import StreamCard from '../components/StreamCard'
 import { news } from '../data/mockData'
 import { streams } from '../data/youtubeStreams'
+import stadiumBg from '../assets/stadium.png'
+import batsmanImg from '../assets/batsman.png'
 
 export default function Home() {
   return (
     <main className="container">
-      <section className="hero">
-        <h1>ICAT</h1>
-        <p>INTERNATIONAL CRICKET ASSOCIATION OF TAMPA</p>
+      <section className="hero" style={{ 
+        backgroundImage: `linear-gradient(135deg, rgba(15,23,42,0.85), rgba(15,23,42,0.7)), url(${stadiumBg})`, 
+        backgroundSize: 'cover', 
+        backgroundPosition: 'center', 
+        borderColor: 'var(--border-primary)', 
+        color: '#fff',
+        boxShadow: 'var(--shadow-lg)'
+      }}>
+        <h1 style={{ background: 'none', WebkitTextFillColor: '#fff', textShadow: '0 4px 15px rgba(0,0,0,0.5)' }}>ICAT</h1>
+        <p style={{ color: '#cbd5e1' }}>INTERNATIONAL CRICKET ASSOCIATION OF TAMPA</p>
         
         <div className="hero-app-promo" style={{ marginTop: '24px' }}>
-          <a href="https://play.google.com/store/apps/details?id=com.cricheroes.icat&hl=en_US" target="_blank" rel="noopener noreferrer" className="app-btn">
+          <a href="https://play.google.com/store/apps/details?id=com.cricheroes.icat&hl=en_US" target="_blank" rel="noopener noreferrer" className="app-btn" style={{ borderColor: '#fff', color: '#fff', background: 'rgba(255,255,255,0.1)' }}>
             <i className="fa-brands fa-google-play"></i> Get the Official ICAT App
           </a>
         </div>
@@ -36,16 +45,16 @@ export default function Home() {
             <i className="fa-brands fa-youtube" style={{ color: '#ff0000', marginRight: '12px' }}></i>
             Official Channel Streams
           </h2>
-          <a href="https://www.youtube.com/@ICAT-FT20" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-gold)', fontSize: '14px', letterSpacing: '1px', textTransform: 'uppercase' }}>Subscribe &rarr;</a>
+          <a href="https://www.youtube.com/@ICAT-FT20" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-primary)', fontSize: '14px', letterSpacing: '1px', textTransform: 'uppercase', fontWeight: 'bold' }}>Subscribe &rarr;</a>
         </div>
         <div className="streams-grid">
           {streams.map(stream => <StreamCard key={stream.id} stream={stream} />)}
         </div>
       </section>
 
-      <section style={{ marginTop: '64px', maxWidth: '800px', margin: '64px auto 0' }}>
-        <div className="card">
-          <h2 className="section-title" style={{ textAlign: 'center' }}>Latest News</h2>
+      <section style={{ marginTop: '64px', maxWidth: '1000px', margin: '64px auto 0', display: 'flex', gap: '32px', alignItems: 'center' }}>
+        <div className="card" style={{ flex: 1 }}>
+          <h2 className="section-title" style={{ textAlign: 'left' }}>Latest Action & News</h2>
           <div className="news-list">
             {news.map((item, idx) => (
               <div key={idx} className="news-item">
@@ -54,6 +63,10 @@ export default function Home() {
                 </div>
               ))}
             </div>
+          </div>
+          
+          <div style={{ flex: 1, borderRadius: '8px', overflow: 'hidden', boxShadow: 'var(--shadow-lg)' }}>
+             <img src={batsmanImg} alt="Cricket Action" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
           </div>
       </section>
     </main>
