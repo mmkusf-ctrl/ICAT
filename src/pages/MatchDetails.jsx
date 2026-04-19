@@ -45,6 +45,47 @@ export default function MatchDetails() {
   const [fielder, setFielder] = useState('');
   const [recentBalls, setRecentBalls] = useState([]);
 
+  // Toss State
+  const [tossCaller, setTossCaller] = useState(t1);
+  const [tossCall, setTossCall] = useState('Heads');
+  const [isFlipping, setIsFlipping] = useState(false);
+  const [tossResult, setTossResult] = useState(null);
+  const [tossWinner, setTossWinner] = useState(null);
+  const [tossDecision, setTossDecision] = useState('');
+  
+  const handleCoinFlip = () => {
+    if(isFlipping) return;
+    setIsFlipping(true);
+    setTossResult(null);
+    setTossWinner(null);
+    
+    setTimeout(() => {
+      const result = Math.random() > 0.5 ? 'Heads' : 'Tails';
+      setTossResult(result);
+      const winner = result === tossCall ? tossCaller : (tossCaller === t1 ? t2 : t1);
+      setTossWinner(winner);
+      setIsFlipping(false);
+    }, 3500); // Wait for CSS animation
+  };
+
+  const confirmTossAndMatch = () => {
+    if(!tossDecision || !tossWinner) return;
+    const finalBattingTeam = tossDecision === 'Bat' ? tossWinner : (tossWinner === t1 ? t2 : t1);
+    const finalBowlingTeam = finalBattingTeam === t1 ? t2 : t1;
+    
+    const isSwapped = finalBattingTeam !== globalState.battingTeam;
+    const oldSquad1 = [...globalState.squad1];
+    const oldSquad2 = [...globalState.squad2];
+    
+    updateGlobal({
+      battingTeam: finalBattingTeam,
+      bowlingTeam: finalBowlingTeam,
+      squad1: isSwapped ? oldSquad2 : oldSquad1,
+      squad2: isSwapped ? oldSquad1 : oldSquad2
+    });
+    alert(`Match sequence locked! ${finalBattingTeam} will Bat first.`);
+  };
+
   // Helper Functions
   const addTimelineBall = (val, type='run') => setRecentBalls(prev => [...prev.slice(-15), {val, type}]);
 
@@ -146,6 +187,59 @@ export default function MatchDetails() {
                 onChange={(e) => setSocketUrl(e.target.value)} 
                 style={{ width: '100%', padding: '12px', background: 'var(--bg-page)', border: '1px solid var(--border-primary)', color: 'var(--text-main)', borderRadius: '6px', outline: 'none' }}
               />
+            </div>
+
+            <div className="toss-environment" style={{ marginBottom: '32px' }}>
+              <div style={{ position: 'absolute', top: 16, left: 24 }}>
+                <h4 style={{ color: 'var(--accent-primary)', fontSize: '18px', fontWeight: 600 }}>Official Match Toss</h4>
+              </div>
+              
+              <div style={{ display: 'flex', gap: '48px', width: '100%', alignItems: 'center', justifyContent: 'center', marginTop: '24px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', minWidth: '240px' }}>
+                  <label style={{ fontSize: '12px', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 600 }}>Calling Team</label>
+                  <select value={tossCaller} onChange={(e) => setTossCaller(e.target.value)} disabled={isFlipping || tossWinner} style={{ padding: '12px', borderRadius: '4px', border: '1px solid var(--border-light)', outline: 'none' }}>
+                    <option value={t1}>{t1}</option>
+                    <option value={t2}>{t2}</option>
+                  </select>
+                  
+                  <label style={{ fontSize: '12px', color: 'var(--text-muted)', textTransform: 'uppercase', marginTop: '8px', fontWeight: 600 }}>The Call</label>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button className="app-btn" onClick={() => setTossCall('Heads')} style={{ flex: 1, padding: '12px', justifyContent: 'center', background: tossCall === 'Heads' ? 'var(--accent-secondary)' : '#fff', color: tossCall === 'Heads' ? '#fff' : 'var(--text-main)' }} disabled={isFlipping || tossWinner}>HEADS</button>
+                    <button className="app-btn" onClick={() => setTossCall('Tails')} style={{ flex: 1, padding: '12px', justifyContent: 'center', background: tossCall === 'Tails' ? 'var(--accent-primary)' : '#fff', color: tossCall === 'Tails' ? '#fff' : 'var(--text-main)' }} disabled={isFlipping || tossWinner}>TAILS</button>
+                  </div>
+                </div>
+
+                <div className={isFlipping ? 'coin-jumping' : ''} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <div className="coin-scene">
+                    <div className="toss-coin" style={{ transform: isFlipping ? (tossCall === 'Heads' ? 'rotateY(1800deg) translateY(-80px)' : 'rotateY(1980deg) translateY(-80px)') : (tossResult === 'Tails' ? 'rotateY(180deg)' : 'rotateY(0deg)') }}>
+                      <div className="coin-face heads">H</div>
+                      <div className="coin-face tails">T</div>
+                    </div>
+                  </div>
+                  <div className="coin-shadow"></div>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', minWidth: '240px' }}>
+                  {!tossWinner ? (
+                    <button className="app-btn" onClick={handleCoinFlip} disabled={isFlipping} style={{ padding: '16px', justifyContent: 'center', background: '#0f172a', color: '#fff', fontWeight: 'bold' }}>
+                      {isFlipping ? 'SPINNING...' : 'FLIP COIN'}
+                    </button>
+                  ) : (
+                    <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                       <div style={{ color: '#059669', fontWeight: 'bold', fontSize: '15px' }}>Result: {tossResult}!</div>
+                       <h4 style={{ fontSize: '18px', color: 'var(--text-main)', margin: 0}}>{tossWinner} Wins Toss</h4>
+                       <label style={{ fontSize: '12px', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 600 }}>Decision</label>
+                       <div style={{ display: 'flex', gap: '8px' }}>
+                         <button className="app-btn" onClick={() => setTossDecision('Bat')} style={{ flex: 1, padding: '10px', justifyContent: 'center', background: tossDecision === 'Bat' ? 'var(--accent-secondary)' : '#fff', color: tossDecision === 'Bat' ? '#fff' : 'var(--text-main)' }}>BAT</button>
+                         <button className="app-btn" onClick={() => setTossDecision('Bowl')} style={{ flex: 1, padding: '10px', justifyContent: 'center', background: tossDecision === 'Bowl' ? 'var(--accent-primary)' : '#fff', color: tossDecision === 'Bowl' ? '#fff' : 'var(--text-main)' }}>BOWL</button>
+                       </div>
+                       {tossDecision && (
+                         <button className="app-btn" onClick={confirmTossAndMatch} style={{ background: '#059669', color: '#fff', padding: '12px', justifyContent: 'center', marginTop: '8px' }}>LOCK DECISION</button>
+                       )}
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px', marginBottom: '32px' }}>
